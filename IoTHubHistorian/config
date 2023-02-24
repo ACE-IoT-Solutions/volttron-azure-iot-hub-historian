@@ -1,0 +1,5 @@
+{
+  # VOLTTRON config files are JSON with support for python style comments.
+  "iot_hub_device_connnection_string": "",
+  "instance_name": ""
+}
