@@ -17,7 +17,7 @@ from volttron.platform.agent.base_historian import BaseHistorianAgent
 from volttron.platform.agent import utils
 from volttron.platform.vip.agent import Agent, Core, RPC
 
-from azure.iot.device import IoTHubDeviceClient, Message
+from azure.iot.device import IoTHubDeviceClient, Message, IoTHubModuleClient
 
 _log = logging.getLogger(__name__)
 utils.setup_logging()
@@ -176,21 +176,6 @@ class IoTHubHistorian(BaseHistorianAgent):
     def shutdown_iot_hub(self):
         self.device_client.shutdown()
 
-    @Core.receiver("onstart")
-    def onstart(self, sender, **kwargs):
-        """
-        This is method is called once the Agent has successfully connected to the platform.
-        This is a good place to setup subscriptions if they are not dynamic or
-        do any other startup activities that require a connection to the message bus.
-        Called after any configurations methods that are called at startup.
-
-        Usually not needed if using the configuration store.
-        """
-        # Example publish to pubsub
-        # self.vip.pubsub.publish('pubsub', "some/random/topic", message="HI!")
-
-        # Exmaple RPC call
-        # self.vip.rpc.call("some_agent", "some_method", arg1, arg2)
 
     @Core.receiver("onstop")
     def onstop(self, sender, **kwargs):
@@ -198,15 +183,7 @@ class IoTHubHistorian(BaseHistorianAgent):
         This method is called when the Agent is about to shutdown, but before it disconnects from
         the message bus.
         """
-        pass
-
-    @RPC.export
-    def rpc_method(self, arg1, arg2, kwarg1=None, kwarg2=None):
-        """
-        RPC method
-
-        May be called from another agent via self.core.rpc.call"""
-        return self.setting1 + arg1 - arg2
+        self.shutdown_iot_hub()
 
 
 def main():
