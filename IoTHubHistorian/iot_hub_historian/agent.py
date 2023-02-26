@@ -125,10 +125,9 @@ class IoTHubHistorian(BaseHistorianAgent):
         self.iot_hub_device_connection_string = iot_hub_device_connection_string
         self.instance_name = instance_name
 
-    def configure(self, config_name, action, contents):
+    def configure(self, contents):
         """
-        Called after the Agent has connected to the message bus. If a configuration exists at startup
-        this will be called before onstart.
+        Called by the BaseHistorian after BaseHistorian has handled it's config
 
         Is called every time the configuration in the store changes.
         """
@@ -161,9 +160,6 @@ class IoTHubHistorian(BaseHistorianAgent):
             _log.error("Batching Loop failed")
             _log.error(e)
             raise e
-
-    def _event_hubs_connection_string(self) -> str:
-        return f"Endpoint={self.event_hubs_endpoint};SharedAccessKeyName={self.shared_access_key_name};SharedAccessKey={self.shared_access_key};EntityPath={self.event_hubs_entity_path}"
 
     def historian_setup(self):
         conn_str = self.iot_hub_device_connection_string
